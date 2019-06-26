@@ -16,21 +16,27 @@ int main(void) {
     DDRA = 0x00; PORTA = 0xFF; // Configure port A's 8 pins as inputs
     DDRB = 0x00; PORTB = 0xFF; // Configure port B's 8 pins as inputs
     DDRC = 0xFF; PORTC = 0x00; // Configure port C's 8 pins as outputs, initialize to 0s
-    signed char tmpA = 0x00;
-    signed char tmpB = 0x00;
-    signed char tmpC = 0x00;
+    unsigned char tmpA = 0x00;
+    unsigned char tmpB = 0x00;
+    unsigned char tmpC = 0x00;
+    unsigned char mask = 0x01;
     while (1) {
 	tmpA = PINA;
 	tmpB = PINB;
-	for (unsigned char i = 0x00; i < 0x07; i++) {
-	    if (tmpA < 0) {
-		tmpC++;
+	tmpC = 0x00;
+	mask = 0x01;
+	unsigned char i = 0;
+	while (i < 8) {
+	    if ((tmpA & mask) != 0) {
+		tmpC = tmpC + 0x01;
 	    }
-	    if (tmpB <0) {
-		tmpC++;
+
+	    if ((tmpB & mask) != 0) {
+		tmpC = tmpC + 0x01;
 	    }
-	    tmpA = tmpA * 2;
-	    tmpB = tmpB * 2;
+
+	    mask = mask * 2;
+	    i++;
 	}	
 	PORTC = tmpC;
     }
